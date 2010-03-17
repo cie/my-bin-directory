@@ -1,0 +1,3 @@
+#!/bin/bash
+[ "$1" = "-l" ] && T=30 || T=3
+pom "$@" | iconv -f utf8 -t latin1 | xmessage -nearmouse -timeout $T -file - -buttons ""

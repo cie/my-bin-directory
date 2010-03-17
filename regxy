@@ -1,0 +1,19 @@
+#!/usr/bin/php
+<?php
+
+#usage: regxy <file> <input> <start label>
+
+require("/home/cie/Program/regxy/regxy.php");
+
+if ($debug = ($argv[1] == '-d')) {
+    array_shift($argv); // cheat: shifts -d into [0]
+}
+
+
+echo utf8_encode(
+    regxy(
+        utf8_decode(file_get_contents($argv[1])),
+        utf8_decode(file_get_contents($argv[2] ? $argv[2] : 'php://stdin')),
+        $debug,
+        $argv[3] ? $argv[3] : false));
+

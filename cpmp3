@@ -1,0 +1,6 @@
+#!/bin/bash
+# Copies every .mp3 file from ./mp3 to <dir>. To be used with mkmp3. Creates <dir> if necessary.
+
+if [ ! "$1" ] ; then echo "Usage: <dir>" && exit 1 ; fi
+mkdir -p "$1"
+cp -i mp3/*.mp3 "$1"

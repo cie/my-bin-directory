@@ -1,0 +1,11 @@
+#!/bin/bash
+
+p=$(basename "$0")
+input=${p:0:3}
+
+#Rip with Mplayer
+for i in "$@"; do 
+    mplayer -vo null -vc dummy -af resample=44100 -ao pcm:waveheader "$i" && 
+    mv audiodump.wav "$(basename "$i" .${input}).wav" || exit $?
+done
+

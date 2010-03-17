@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#Rip with Mplayer / encode with LAME
+for i in "$@" ; do mplayer -vo null -vc dummy -af resample=44100 -ao pcm:waveheader "$i" && lame -m s audiodump.wav -o "$(basename "$i" .wma).mp3"; done
+
+rm audiodump.wav

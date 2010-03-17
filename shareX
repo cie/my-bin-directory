@@ -1,0 +1,3 @@
+#!/bin/bash
+
+x11vnc -connect_or_exit localhost:5520 -rfbport 0

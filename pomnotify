@@ -1,0 +1,1 @@
+[ "$(pom | cut -f1 -d' ')" != "no" ] && notify "Working on $(pom | cut -f1 -d' ')." "$(pom | cut -f2 -d' ')"

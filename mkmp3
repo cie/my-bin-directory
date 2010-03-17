@@ -1,0 +1,13 @@
+#!/bin/bash
+# To be executed in a jack directory. Moves every *.mp3 file to ./mp3, re-tags them with id3v1 (for better charset compatibility with SonyEriccson). Gets data from ./jack.freedb
+
+mkdir mp3 -p || exit $?
+mv *.mp3 mp3 
+cd mp3 &&
+id3 -d *.mp3 &&
+id3v2 -d *.mp3 &&
+jack -g *.mp3 &&
+cp -f ../jack.freedb . &&
+jack --rename --rename-dir=no --write-id3v1=yes --write-id3v2=no &&
+id3v2 -l *.mp3 &&
+echo Done.

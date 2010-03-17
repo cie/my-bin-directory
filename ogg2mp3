@@ -1,0 +1,8 @@
+#!/bin/bash
+# Converts each .ogg file in the current directory tree to .wav then to .mp3.
+
+dir=`pwd`
+find -name '*.ogg' | (while read j; do
+	oggdec "$j"
+	lame "${j/%.ogg/.wav}" "${j/%.ogg/.mp3}"
+done)
