@@ -1,0 +1,50 @@
+#!/bin/bash
+POMDIRS=/home/cie/.pomdirs
+PPD=${PPD:-$POMDIRS/$PWP}
+CHPLINK=.dir
+CHPPOM=0
+OLDPWP=$PWP
+
+if [ $# = 0 ]; then
+    cd "$PPD"
+else
+
+    # cd into 
+    if $(echo "$1" | grep '^/' > /dev/null); then
+        PPD="$POMDIRS$1"
+    else
+        PPD="$PPD/$1" # TODO: ../../ proofness
+    fi
+
+    mkdir -p "$PPD"
+    cd "$PPD"
+    PPD="$PWD"
+
+    if [ "$PPD" = "$POMDIRS" ]; then
+        PWP=/
+    else 
+        PWP="${PPD:${#POMDIRS}}"
+    fi
+
+    if [ "$CHPPOM" = 1 ]; then
+        pom "$PWP" 
+    fi
+
+
+    cd "$PPD"
+    if [ "$2" ] ; then
+        mkdir -p "$2"
+        [ -h $CHPLINK ] && rm -f $CHPLINK
+        ln -s "$2" $CHPLINK
+    elif ! [ -a $CHPLINK ] && [ -h ../$CHPLINK ]; then 
+        cp -R ../$CHPLINK .  # -R is not true
+    fi
+
+    # if $CHPLINK is '.' of 'sth/.', do not cd in the $CHPLINK
+
+fi
+
+if [ -d $CHPLINK ] && ! ( echo "$1" | grep '^\.$' > /dev/null || echo "$1" | grep '/\.$' > /dev/null )  then 
+    cd -P $CHPLINK
+fi
+

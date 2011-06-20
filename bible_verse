@@ -1,0 +1,12 @@
+#!/bin/bash
+
+FILE="$HOME/lib/bible_verse/bible_verses.txt"
+N=$(wc -l "$FILE" | cut -f1 -d' ')
+
+while true; do 
+    VERSE="$(tail -n+$(( (RANDOM+RANDOM+RANDOM)%N+1)) "$FILE" | head -1)" || exit 1
+    echo "$(date) $VERSE" >> ~/lib/bible_verse/log
+    notify "$(echo $VERSE | cut -d: -f1-2)" "$(echo $(echo $VERSE | cut -d: -f3-))" /usr/share/icons/hicolor/scalable/apps/xiphos.svg
+    sleep $(( (RANDOM%5) * 60 ))
+done
+

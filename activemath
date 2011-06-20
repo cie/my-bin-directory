@@ -1,0 +1,22 @@
+#!/bin/bash
+
+start() {
+  /usr/bin/amStartup
+  pom activemath
+  /usr/bin/amWatch
+}
+
+stop() {
+  /usr/bin/amShutdown
+  pom no
+}
+
+pause() {
+  pom no
+}
+
+resume() {
+  pom activemath
+}
+
+"$@"

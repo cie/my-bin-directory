@@ -1,13 +1,14 @@
 #!/bin/bash
+NOTIFY=/home/cie/bin/notify
 x() {
-    /home/cie/bin/notify "Az akkumulátor lemerül" "A jelenlegi töltöttség $E%." "$1"
+    $NOTIFY "Az akkumulátor lemerül" "A jelenlegi töltöttség $E%." "$1"
     #echo "Az akkumulátor lemerül" "A jelenlegi töltöttség $E%."
 }
 y() {
-    /home/cie/bin/notify "Az akkumulátor töltődik" "A jelenlegi töltöttség $E%." "$1"
+    if [ "$2" '!=' y ]; then 
+        $NOTIFY "Az akkumulátor töltődik" "A jelenlegi töltöttség $E%." "$1"
+    fi
     #echo "Az akkumulátor töltődik" "A jelenlegi töltöttség $E%."
-    while charging; do sleep 60; done
-    
 }
 charging() {
     acpi -b | grep Charging > /dev/null;
@@ -15,14 +16,17 @@ charging() {
 
 while true; do
     E=$(acpi -b | grep -oP '\d+%' | sed s/%//)
+    oldcmd=$cmd
+    sleep=sleep
     if charging; then cmd=y; else cmd=x; fi
-    if (( $E < 5 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_empty.svg'; sleep 30
-    elif (( $E < 10 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_empty.svg'; sleep 60
-    elif (( $E < 15 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery-caution.svg'; sleep 300
-    elif (( $E < 50 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery-low.svg'; sleep 600
-    elif (( $E < 66 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_two_thirds.svg'; sleep 1200
-    elif (( $E < 75 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_third_fourth.svg'; sleep 1800
-    elif (( $E < 100 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_full.svg'; sleep 2400
+    if (( $E < 5 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_empty.svg' $oldcmd; $sleep 30
+    elif (( $E < 10 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_empty.svg' $oldcmd; $sleep 60
+    elif (( $E < 15 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery-caution.svg' $oldcmd; $sleep 90
+    elif (( $E < 50 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery-low.svg' $oldcmd; $sleep 300
+    elif (( $E < 66 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_two_thirds.svg' $oldcmd; $sleep 200
+    elif (( $E < 75 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_third_fourth.svg' $oldcmd; $sleep 450
+    elif (( $E < 100 )); then $cmd 'file:///usr/share/icons/Humanity/status/48/battery_full.svg' $oldcmd; $sleep 600
+    else sleep 600
     fi
 done
 

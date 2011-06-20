@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$1" = '-' ]; then
+    . ~/bin/chp ${OLDPWP:-/} $2
+else
+    . ~/bin/chp $1 $2
+fi
+[ -e .chpomrc ] && . .chpomrc || l
+shift
+shift
+pom s "$PWP" "$@"

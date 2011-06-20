@@ -1,0 +1,3 @@
+#!/bin/bash
+
+xbible "Psalms $((RANDOM%150+1))"

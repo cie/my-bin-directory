@@ -1,0 +1,4 @@
+#!/bin/bash
+
+if ! [ "$1" ]; then A=1; else A="$1"; fi
+eval tail -n$A ~/lib/bible_verse/log | head -1 

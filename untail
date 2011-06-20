@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+while (<STDIN>) {
+    print;
+}
+
+while (<>) {
+    print;
+}
+

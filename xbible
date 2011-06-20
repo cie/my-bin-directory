@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bible "$@" | head -n-1 | (echo "$@"; cat) | sed 's/^[a-zA-Z]\+ [0-9]\+:[0-9]\+: //' | sed 's/[a-zA-Z0-9]\+ [0-9]\+:[0-9-]\+//g' | iconv -f utf8 -t latin2 | xmessage -file - -buttons "Close"

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+if ! [ "$1" ]; then echo "Usage: $0 <n>"; exit 1; fi
+tail -$1 ~/lib/bible_verse/log | head -1 | (read i; echo "$i"; echo "$i" >> ~/lib/bible_verse/starred)

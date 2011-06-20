@@ -19,15 +19,8 @@ while :; do
     # Wireless
     # On this system quality is a percentage
     # Battery
-    BAT="$(acpi -b | grep -oP '\d+%' | sed s/%//)"
-    if [ $BAT -lt 15 ]; then 
-        if [ $BLINK = 1 ]; then BAT=""; fi
-    else
-        BAT="$BAT%"
-        acpi -b | grep Charging > /dev/null && BAT="$BAT+"
-    fi
     DATE="$(date +"%Y-%m-%d %A %H:%M:%S")"
-
+    BAT=$(/home/cie/bin/battery)
     POM=$(/home/cie/bin/pom)
     echo "$(span 67 "$POM") $(span 50 "$BAT") $(span 30 "$DATE")" | iconv -f utf8 -t latin2
 

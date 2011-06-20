@@ -1,0 +1,32 @@
+#!/usr/bin/python
+
+import pygtk
+
+pygtk.require('2.0')
+
+import gtk
+import gnome.applet
+import sys
+
+def sample_factory(applet, iid):
+    label = gtk.Label("Success!")
+    applet.add(label)
+
+    applet.show_all()
+    return gtk.TRUE
+
+gnome.applet.bonobo_factory("OAFIID:GNOME_PysampleApplet_Factory", 
+                             gnome.applet.Applet.__gtype__, 
+                             "hello", "0", sample_factory)
+
+if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":   
+        main_window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        main_window.set_title("Python Applet")
+        main_window.connect("destroy", gtk.mainquit) 
+        app = gnome.applet.Applet()
+        sample_factory(app, None)
+        app.reparent(main_window)
+        main_window.show_all()
+        gtk.main()
+        sys.exit()
+

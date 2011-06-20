@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# correction values for panels
+[ "$LEFTPAN" ] || LEFTPAN=0 || LEFTPAN=24
+[ "$RIGHTPAN" ] || RIGHTPAN=0 || RIGHTPAN=24
+[ "$TOPPAN" ] || TOPPAN=0
+[ "$BOTTOMPAN" ] || BOTTOMPAN=0
+[ "$XCORR" ] || XCORR=7
+[ "$YCORR" ] || YCORR=25
+
+if [ $# -lt 4 ]; then
+    echo <<EOF
+Usage: $(basename "$0") <left> <top> <width> <height>
+Resizes the active window to the given coordinates. All are given in the percent of the screen width/height.
+Example:
+  \$ $(basename "$0") 0 0 100 50
+puts the window in the top half of the screen.
+EOF
+exit
+fi
+
+
+# get screen dimensions
+WIDTH=$((`xdpyinfo | grep 'dimensions:' | cut -f 2 -d ':' | cut -f 1 -d 'x'` - $LEFTPAN - $RIGHTPAN)) || exit 1
+HEIGHT=$((`xdpyinfo | grep 'dimensions:' | cut -f 2 -d ':' | cut -f 2 -d 'x' | cut -f 1 -d ' '` - $TOPPAN - $BOTTOMPAN)) || exit 1
+
+
+# calculate coordinates
+X1=$((WIDTH*$1/100 + LEFTPAN)) || exit 1
+Y1=$((HEIGHT*$2/100 + TOPPAN)) || exit 1
+WD=$((WIDTH*$3/100 - XCORR)) || exit 1
+HT=$((HEIGHT*$4/100 - YCORR)) || exit 1
+echo $X1 $Y1 $WD $HT
+
+# set/unset maximization
+[ "$1" -eq 0 ] && [ "$3" -eq 100 ] && wmctrl -r :ACTIVE: -b add,maximized_horz || wmctrl -r :ACTIVE: -b remove,maximized_horz
+[ "$2" -eq 0 ] && [ "$4" -eq 100 ] && wmctrl -r :ACTIVE: -b add,maximized_vert || wmctrl -r :ACTIVE: -b remove,maximized_vert
+
+# resize
+wmctrl -r :ACTIVE: -e 0,$X1,$Y1,$WD,$HT

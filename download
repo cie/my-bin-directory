@@ -1,0 +1,42 @@
+#!/usr/bin/ruby
+
+def process url, *patterns
+    p url, patterns
+    #sleep 2
+    if patterns.none? then
+        puts "wget -c #{url}"
+        #sleep 2
+        `wget -c #{url}`
+    else
+        pattern = patterns.shift
+        puts "curl #{url}"
+        #sleep 2
+        html = `curl #{url} 2>/dev/null`
+        puts "pattern = #{pattern}"
+        #sleep 2
+        pattern = Regexp.quote(pattern)
+        pattern.gsub!("\\*\\*", "[a-zA-Z0-9/._-]*")
+        pattern.gsub!("\\*", "[a-zA-Z0-9._-]*")
+        pattern.gsub!("\\?", "[a-zA-Z0-9._-]")
+        html.scan(/(#{pattern})/).uniq.each do |u|
+            p u
+            u = u.first
+            if u !~ /^https?:/ then 
+                if u !~ /^\// then
+                    u= (url =~ /\/$/) ? url+u : File.dirname(url)+"/"+u
+                    puts "new: " + u
+                    #sleep 2
+                else
+                    u=url[/^http:\/\/[a-z.-]+/]+"/"+u
+                    puts "new: " + u
+                    #sleep 2
+                end
+            end
+            process u, *patterns
+        end
+        if !html[/#{pattern}/] then puts "Not found"; sleep 2 end
+    end
+        
+end
+
+process *ARGV
